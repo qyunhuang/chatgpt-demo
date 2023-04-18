@@ -3,21 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@craco/craco": "^7.1.0",
+    "@dqbd/tiktoken": "^1.0.6",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "chatgpt": "^5.2.2",
     "dotenv": "^16.0.3",
+    "https-proxy-agent": "^5.0.1",
+    "net": "^1.0.2",
+    "node-fetch": "^3.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.4.2"
+    "tls": "^0.0.1",
+    "typescript": "^4.4.2",
+    "url": "^0.11.0",
+    "webpack": "^5.79.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build"
+  },
+  "browser": {
+    "tls": false,
+    "net": false
   },
   "eslintConfig": {
     "extends": [
