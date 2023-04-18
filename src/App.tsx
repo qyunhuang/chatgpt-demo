@@ -26,8 +26,9 @@ const App = () => {
         },
       });
 
-      const res = await api.sendMessage("tell me a joke");
-      setText(res.text);
+      await api.sendMessage("tell me a story", {
+        onProgress: (r) => setText(r.text),
+      });
     };
 
     test();
