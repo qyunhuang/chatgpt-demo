@@ -6,3 +6,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.question {
+  padding: 30px 30vw;
+}
+
+.answer {
+  padding: 30px 30vw;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background-color: #f7f7f7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}

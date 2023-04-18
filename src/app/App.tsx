@@ -1,12 +1,12 @@
 import * as React from 'react';
 import TextInput from "../components/TextInput";
-import Chat from "../components/Chat";
+import ChatBoard from "../components/ChatBoard";
 import { Stack } from '@mui/material';
 
 const App = () => {
   return (
     <Stack>
-      <Chat />
+      <ChatBoard />
       <TextInput />
     </Stack>
   );

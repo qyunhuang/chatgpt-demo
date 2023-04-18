@@ -3,15 +3,23 @@ import { config } from "../config/config";
 import { ChatGPTAPI } from "chatgpt";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { Stack, Typography, Box } from "@mui/material";
-import { selectSendMsg } from "../store/uiSlice";
-import { useSelector } from 'react-redux';
+import { selectSendMsg, selectHistory } from "../store/uiSlice";
+import { useSelector, useDispatch } from 'react-redux';
+import { uiSlice } from "../store/uiSlice";
 
-const Chat = () => {
+const ChatBoard = () => {
   const [ans, setAns] = React.useState<undefined | string>("");
+  const [onProgress, setOnProgress] = React.useState<boolean>(false);
   const sendMsg = useSelector(selectSendMsg);
+  const chatHistory = useSelector(selectHistory);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     const getAns = async () => {
+      if (chatHistory.length % 2 === 0) {
+        return;
+      }
+
       const options = {
         apiKey: config.api,
         debug: true,
@@ -31,30 +39,44 @@ const Chat = () => {
         },
       });
 
-      await api.sendMessage(sendMsg, {
-        onProgress: r => setAns(r.text),
+      const res = await api.sendMessage(sendMsg, {
+        onProgress: r => {
+          setOnProgress(true);
+          setAns(r.text);
+        },
       });
+
+      console.log(res);
+
+      setOnProgress(false);
+      dispatch(uiSlice.actions.pushAnswer(res.text));
     };
 
     if (sendMsg) {
       getAns().then(() => {});
     }
-  }, [sendMsg]);
+  }, [sendMsg, dispatch, chatHistory.length]);
+
+  const chatHistoryList = chatHistory.map((item, index) => {
+    return (
+      <Box key={index} className={item.msgType === 'question' ? 'question' : 'answer'}>
+        <Typography>
+          {item.msg}
+        </Typography>
+      </Box>
+    );
+  });
 
   return (
     <Stack>
-      <Box sx={{ py: 3, px: '30vw', bgcolor: '#f3f3f3' }}>
-        <Typography>
-          {sendMsg}
-        </Typography>
-      </Box>
-      <Box sx={{ py: 3, px: '30vw', borderTop: '1px solid #ddd', borderBottom: '1px solid #ddd' }}>
+      {chatHistoryList}
+      {onProgress && <Box className={'answer'}>
         <Typography>
           {ans}
         </Typography>
-      </Box>
+      </Box>}
     </Stack>
   );
 }
 
-export default Chat;
+export default ChatBoard;
