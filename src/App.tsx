@@ -16,7 +16,7 @@ const App = () => {
         ...options, // Spread operator to include any additional options provided to ChatGPTAPI constructor
         fetch: (url, options = {}) => {
           const defaultOptions = {
-            agent: new HttpsProxyAgent({host: '127.0.0.1', port: 7890}), // Update to pass proxy server information correctly
+            agent: new HttpsProxyAgent({host: config.proxyHost, port: config.proxyPort}), // Update to pass proxy server information correctly
           }
           const mergedOptions = {
             ...defaultOptions,
@@ -27,7 +27,6 @@ const App = () => {
       });
 
       const res = await api.sendMessage("tell me a joke");
-      console.log(res.text, 1);
       setText(res.text);
     };
 
