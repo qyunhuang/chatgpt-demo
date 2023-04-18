@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {OutlinedInput, IconButton, InputAdornment, Box, Stack, Container, Typography} from "@mui/material";
+import { OutlinedInput, IconButton, InputAdornment, Box, Stack, Container, Typography } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { uiSlice } from "../store/uiSlice";
 import { useDispatch } from "react-redux";
@@ -22,9 +22,9 @@ const TextInput = () => {
   };
 
   return (
-    <Box sx={{ backgroundImage: "linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1))",
-      position: "sticky", bottom: 0, height: '15vh' }}>
-      <Stack pt={5} pb={0}>
+    <Box sx={{ backgroundImage: "linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 1))",
+      position: "sticky", bottom: 0, height: '13vh' }}>
+      <Stack pt={3} pb={0}>
         <OutlinedInput
           placeholder={"Send a message..."}
           onKeyDown={handleKeyDown}
