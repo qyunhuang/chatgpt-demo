@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #374151;
 }
 
 .question {
@@ -32,3 +33,32 @@ body {
   background-color: #ddd;
 }
 
+.answer {
+  ::-webkit-scrollbar{
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+  }
+}
+
+.copy-to-clipboard {
+  margin-top: 20px;
+  background-color: #343541;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
+
+  .lang {
+    color: #fff;
+    font-size: 10px;
+    margin-left: 15px;
+  }
+
+  .copy-button {
+    background-color: transparent;
+    color: #fff;
+    font-size: 10px;
+    margin-right: 5px;
+  }
+}

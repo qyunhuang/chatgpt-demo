@@ -6,9 +6,10 @@ import { Stack, Typography, Box } from "@mui/material";
 import { selectSendMsg, selectHistory } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { uiSlice } from "../store/uiSlice";
+import CodeBlock from "./CodeBlock";
 
 const ChatBoard = () => {
-  const [ans, setAns] = React.useState<undefined | string>("");
+  const [ans, setAns] = React.useState<string>("");
   const [onProgress, setOnProgress] = React.useState<boolean>(false);
   const sendMsg = useSelector(selectSendMsg);
   const chatHistory = useSelector(selectHistory);
@@ -46,7 +47,7 @@ const ChatBoard = () => {
         },
       });
 
-      console.log(res);
+      console.log(res.text);
 
       setOnProgress(false);
       dispatch(uiSlice.actions.pushAnswer(res.text));
@@ -70,12 +71,25 @@ const ChatBoard = () => {
     }
   }, [ans, onProgress]);
 
+  const codeBlocks = (text: string) => text.split('```').map((item, index) => {
+    if (index % 2 === 0) {
+      return (
+        <Typography key={index}>
+          {item}
+        </Typography>
+      );
+    }
+
+    const lang = item.split('\n')[0] || 'jsx';
+    const code = item.slice(item.indexOf('\n') + 1);
+
+    return <CodeBlock key={index} code={code} language={lang} />;
+  });
+
   const chatHistoryList = chatHistory.map((item, index) => {
     return (
       <Box key={index} className={item.msgType === 'question' ? 'question' : 'answer'}>
-        <Typography>
-          {item.msg}
-        </Typography>
+        {codeBlocks(item.msg)}
       </Box>
     );
   });
@@ -84,9 +98,7 @@ const ChatBoard = () => {
     <Stack>
       {chatHistoryList}
       {onProgress && <Box className={'answer'}>
-        <Typography>
-          {ans}
-        </Typography>
+        {codeBlocks(ans)}
       </Box>}
     </Stack>
   );
