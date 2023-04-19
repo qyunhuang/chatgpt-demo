@@ -54,8 +54,21 @@ const ChatBoard = () => {
 
     if (sendMsg) {
       getAns().then(() => {});
+
+      window.scrollTo({
+        top: document.body.scrollHeight,
+      });
     }
   }, [sendMsg, dispatch, chatHistory.length]);
+
+  React.useEffect(() => {
+    if (onProgress) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [ans, onProgress]);
 
   const chatHistoryList = chatHistory.map((item, index) => {
     return (
