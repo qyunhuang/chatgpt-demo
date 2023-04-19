@@ -62,3 +62,39 @@ body {
     margin-right: 5px;
   }
 }
+
+.input-container {
+  background-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 22%, #fff 60%);
+  position: sticky;
+  bottom: 0;
+  height: 16.5vh;
+}
+
+
+.text-input {
+  width: 42%;
+  height: 5vh;
+  box-shadow: 1px 1px 8px #aaa;
+  background-color: white;
+  left: 50%;
+  transform: translateX(-50%);
+
+  & fieldset {
+    border-color: white;
+  }
+
+  &:hover fieldset {
+    border-color: white !important
+  }
+
+  &.Mui-focused fieldset {
+    border-color: white !important;
+  }
+}
+
+.generate-button {
+  position: absolute;
+  top: 2.5vh;
+  left: 50%;
+  transform: translateX(-50%);
+}

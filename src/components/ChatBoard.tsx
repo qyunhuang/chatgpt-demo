@@ -71,12 +71,28 @@ const ChatBoard = () => {
     }
   }, [ans, onProgress]);
 
+  const emphasisBlocks = (text: string) => text.split('`').map((item, index) => {
+    if (index % 2 === 0) {
+      return (
+        <Typography component={'span'} key={index}>
+          {item}
+        </Typography>
+      );
+    }
+
+    return (
+      <Typography key={index} component={'span'} color={'#111827'} fontSize={15} fontWeight={600}>
+        {`\`${item}\``}
+      </Typography>
+    );
+  });
+
   const codeBlocks = (text: string) => text.split('```').map((item, index) => {
     if (index % 2 === 0) {
       return (
-        <Typography key={index}>
-          {item}
-        </Typography>
+        <>
+          {emphasisBlocks(item)}
+        </>
       );
     }
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { OutlinedInput, IconButton, InputAdornment, Box, Stack, Container, Typography } from "@mui/material";
-import { Send } from "@mui/icons-material";
+import { Send, Loop } from "@mui/icons-material";
 import { uiSlice } from "../store/uiSlice";
 import { useDispatch } from "react-redux";
 
@@ -22,35 +22,43 @@ const TextInput = () => {
   };
 
   return (
-    <Box sx={{ backgroundImage: "linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 1))",
-      position: "sticky", bottom: 0, height: '13vh' }}>
-      <Stack pt={3} pb={0}>
-        <OutlinedInput
-          placeholder={"Send a message..."}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                disabled={text === ""}
-                onClick={handleSend}
-              >
-                <Send />
-              </IconButton>
-            </InputAdornment>
-          }
-          sx={{ width: "42%", height: '5vh', boxShadow: '1px 1px 8px #aaa', bgcolor: 'white', left: "50%", transform: "translateX(-50%)",
-            "& fieldset": { borderColor: "white" }, "&:hover fieldset": { borderColor: "white !important" },
-            "&.Mui-focused fieldset": { borderColor: "white !important" } }}
-        />
-        <Container sx={{ bgcolor: 'white', width: "42%", left: '50%', textAlign: 'center', p: 1.5 }} >
-          <Typography fontSize={12} color={'grey'}>
-            ChatGPT Mar 23 Version. ChatGPT may produce inaccurate information about people, places, or facts.
-          </Typography>
-        </Container>
-      </Stack>
-    </Box>
+    <>
+      <Box className={'input-container'}>
+        <IconButton
+          className={'generate-button'}
+          sx={{ color: 'rgba(64 ,65, 79)', bgcolor: 'white', textTransform: 'none',
+            fontSize: 15, borderRadius: 1, border: '1px solid #ddd',
+            '&:hover': { bgcolor: 'rgb(236, 236, 241)', color: 'rgb(64, 65, 79)' } }}
+        >
+          <Loop sx={{ fontSize: 16, mr: 1 }} />
+          Regenerate response
+        </IconButton>
+        <Stack pt={4} pb={0}>
+          <OutlinedInput
+            className={'text-input'}
+            placeholder={"Send a message..."}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setText(e.target.value)}
+            value={text}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  disabled={text === ""}
+                  onClick={handleSend}
+                >
+                  <Send />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          <Container sx={{ bgcolor: 'white', width: "42%", left: '50%', textAlign: 'center', p: 1.5 }} >
+            <Typography fontSize={12} color={'grey'}>
+              ChatGPT Mar 23 Version. ChatGPT may produce inaccurate information about people, places, or facts.
+            </Typography>
+          </Container>
+        </Stack>
+      </Box>
+    </>
   );
 };
 
