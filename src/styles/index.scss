@@ -41,6 +41,10 @@ body {
   ::-webkit-scrollbar-thumb {
     background-color: #bbb;
   }
+
+  code {
+    background-color: black !important;
+  }
 }
 
 .copy-to-clipboard {

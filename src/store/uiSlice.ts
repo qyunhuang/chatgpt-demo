@@ -9,11 +9,13 @@ export interface IMsg {
 
 export interface UiState {
   curQustion: string;
+  onProgress: boolean;
   history: IMsg[];
 }
 
 const initialState: UiState = {
   curQustion: "",
+  onProgress: false,
   history: localStorage.getItem("chatHistory") ? JSON.parse(localStorage.getItem("chatHistory") as string) : [],
 }
 
@@ -29,12 +31,20 @@ export const uiSlice = createSlice({
         msgType: 'question',
       });
     },
-    pushAnswer: (state: UiState, action: PayloadAction<string>) => {
-      state.history.push({
-        id: state.history.length,
-        msg: action.payload,
-        msgType: 'answer',
-      });
+    changeCurAnswer: (state: UiState, action: PayloadAction<string>) => {
+      if (state.history[state.history.length - 1].msgType === 'question') {
+        state.history.push({
+          id: state.history.length,
+          msg: action.payload,
+          msgType: 'answer',
+        });
+        return;
+      }
+
+      state.history[state.history.length - 1].msg = action.payload;
+    },
+    changeOnProgress: (state: UiState, action: PayloadAction<boolean>) => {
+      state.onProgress = action.payload;
     }
   },
 });
@@ -48,3 +58,4 @@ export const localStorageMiddleware: Middleware = store => next => action => {
 
 export const selectSendMsg = (state: rootState) => state.ui.curQustion;
 export const selectHistory = (state: rootState) => state.ui.history;
+export const selectOnProgress = (state: rootState) => state.ui.onProgress;

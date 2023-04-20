@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Stack, Typography, IconButton, Box } from '@mui/material';
 import { ContentCopy, Check } from "@mui/icons-material";
@@ -36,7 +36,7 @@ const CodeBlock = (props: ICodeBlockProps) => {
       </CopyToClipboard>
       <SyntaxHighlighter
         language={language}
-        style={dracula}
+        style={oneDark}
         wrapLines={true}
         customStyle={{ marginTop: 0, marginBottom: 20, borderTopLeftRadius: 0, borderTopRightRadius: 0,
           backgroundColor: 'black', fontSize: '0.875em' }}

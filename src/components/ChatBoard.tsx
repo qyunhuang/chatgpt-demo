@@ -7,6 +7,7 @@ import { selectSendMsg, selectHistory } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { uiSlice } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
+import { useThrottledCallback } from "use-debounce";
 
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
@@ -43,33 +44,42 @@ const ChatBoard = () => {
       const res = await api.sendMessage(sendMsg, {
         onProgress: r => {
           setOnProgress(true);
+          dispatch(uiSlice.actions.changeOnProgress(true));
           setAns(r.text);
+          dispatch(uiSlice.actions.changeCurAnswer(r.text));
         },
       });
 
       console.log(res.text);
 
       setOnProgress(false);
-      dispatch(uiSlice.actions.pushAnswer(res.text));
+      dispatch(uiSlice.actions.changeOnProgress(false));
+
+      window.scrollTo({
+        top: document.body.scrollHeight
+      });
     };
 
     if (sendMsg) {
       getAns().then(() => {});
 
       window.scrollTo({
-        top: document.body.scrollHeight,
+        top: document.body.scrollHeight
       });
     }
   }, [sendMsg, dispatch, chatHistory.length]);
 
+  const throttledScrollToBottom = useThrottledCallback(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight
+    });
+  }, 200, { leading: true, trailing: false });
+
   React.useEffect(() => {
     if (onProgress) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
+      throttledScrollToBottom();
     }
-  }, [ans, onProgress]);
+  }, [ans, onProgress, throttledScrollToBottom]);
 
   const emphasisBlocks = (text: string) => text.split('`').map((item, index) => {
     if (index % 2 === 0) {
@@ -113,9 +123,6 @@ const ChatBoard = () => {
   return (
     <Stack>
       {chatHistoryList}
-      {onProgress && <Box className={'answer'}>
-        {codeBlocks(ans)}
-      </Box>}
     </Stack>
   );
 }
