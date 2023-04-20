@@ -19,6 +19,8 @@
     "buffer": "^6.0.3",
     "chatgpt": "^5.2.2",
     "dotenv": "^16.0.3",
+    "echarts": "^5.4.2",
+    "echarts-for-react": "^3.0.2",
     "https-proxy-agent": "^5.0.1",
     "net": "^1.0.2",
     "node-fetch": "^3.3.1",

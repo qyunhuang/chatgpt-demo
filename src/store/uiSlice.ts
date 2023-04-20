@@ -8,13 +8,13 @@ export interface IMsg {
 }
 
 export interface UiState {
-  curQustion: string;
+  curQuestion: string;
   onProgress: boolean;
   history: IMsg[];
 }
 
 const initialState: UiState = {
-  curQustion: "",
+  curQuestion: "",
   onProgress: false,
   history: localStorage.getItem("chatHistory") ? JSON.parse(localStorage.getItem("chatHistory") as string) : [],
 }
@@ -23,8 +23,8 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: initialState,
   reducers: {
-    changeQustion: (state: UiState, action: PayloadAction<string>) => {
-      state.curQustion = action.payload;
+    changeQuestion: (state: UiState, action: PayloadAction<string>) => {
+      state.curQuestion = action.payload;
       state.history.push({
         id: state.history.length,
         msg: action.payload,
@@ -56,6 +56,6 @@ export const localStorageMiddleware: Middleware = store => next => action => {
   return result;
 }
 
-export const selectSendMsg = (state: rootState) => state.ui.curQustion;
+export const selectSendMsg = (state: rootState) => state.ui.curQuestion;
 export const selectHistory = (state: rootState) => state.ui.history;
 export const selectOnProgress = (state: rootState) => state.ui.onProgress;

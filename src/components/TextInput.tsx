@@ -11,7 +11,7 @@ const TextInput = () => {
 
   const handleSend = () => {
     if (text !== "") {
-      dispatch(uiSlice.actions.changeQustion(text));
+      dispatch(uiSlice.actions.changeQuestion(text));
       setText("");
     }
   };

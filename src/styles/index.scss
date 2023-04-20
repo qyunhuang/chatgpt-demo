@@ -17,6 +17,18 @@ body {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   background-color: #f7f7f7;
+
+  ::-webkit-scrollbar{
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+  }
+
+  code {
+    background-color: black !important;
+  }
 }
 
 * {
@@ -31,20 +43,6 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #ddd;
-}
-
-.answer {
-  ::-webkit-scrollbar{
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-  }
-
-  code {
-    background-color: black !important;
-  }
 }
 
 .copy-to-clipboard {

@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { uiSlice } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
 import { useThrottledCallback } from "use-debounce";
+import Echart from "./Echart";
 
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
@@ -97,19 +98,45 @@ const ChatBoard = () => {
     );
   });
 
+  const echartsOption = (code: string): null | object => {
+    if (!code.split('option = ')[1]) {
+      return null;
+    }
+
+    const option = code.split('option = ')[1]
+      .replace(/\/\/.*$/gm, '')  // remove comments
+      .replace(/(\b\w+\b)(?=:)/g, '"$1"')  // add double quotes to keys
+      .replace(/'/g, '"')  // replace single quotes with double quotes
+      .replace(/\n/g, "")  // remove \n
+      .replace(/[^\S\r\n]/g, '')  // remove whitespace
+      .replace(/;/g, "");  // remove ;
+
+    if (!option.match(/^{.*}$/)) {
+      return null;
+    }
+
+    return JSON.parse(option);
+  }
+
   const codeBlocks = (text: string) => text.split('```').map((item, index) => {
     if (index % 2 === 0) {
       return (
-        <>
+        <React.Fragment key={index}>
           {emphasisBlocks(item)}
-        </>
+        </React.Fragment>
       );
     }
 
     const lang = item.split('\n')[0] || 'jsx';
     const code = item.slice(item.indexOf('\n') + 1);
+    const option = echartsOption(code);
 
-    return <CodeBlock key={index} code={code} language={lang} />;
+    return (
+      <Stack key={index}>
+        <CodeBlock code={code} language={lang} />
+        {option && <Echart option={option} />}
+      </Stack>
+    );
   });
 
   const chatHistoryList = chatHistory.map((item, index) => {
