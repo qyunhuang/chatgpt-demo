@@ -17,10 +17,18 @@ const TextInput = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && text !== "") {
+    if (e.shiftKey && e.key === 'Enter') {
+      e.preventDefault();
+      setText(text + '\n');
+    } else if (e.key === "Enter" && text !== "") {
+      e.preventDefault();
       handleSend();
     }
   };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  }
 
   return (
     <>
@@ -36,10 +44,12 @@ const TextInput = () => {
         </IconButton>
         <Stack pt={4} pb={0}>
           <OutlinedInput
+            multiline
+            maxRows={8}
             className={'text-input'}
             placeholder={"Send a message..."}
             onKeyDown={handleKeyDown}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleTextChange}
             value={text}
             endAdornment={
               <InputAdornment position="end">
@@ -52,7 +62,7 @@ const TextInput = () => {
               </InputAdornment>
             }
           />
-          <Container sx={{ bgcolor: 'white', width: "42%", left: '50%', textAlign: 'center', p: 1.5 }} >
+          <Container sx={{ bgcolor: 'white', width: "42%", left: '50%', textAlign: 'center', p: 3 }} >
             <Typography fontSize={12} color={'grey'}>
               ChatGPT Mar 23 Version. ChatGPT may produce inaccurate information about people, places, or facts.
             </Typography>
