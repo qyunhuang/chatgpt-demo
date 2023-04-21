@@ -128,6 +128,15 @@ body {
   cursor: pointer;
 }
 
+.session-selected {
+  @extend .session;
+  background-color: rgba(52, 53, 65);
+}
+
+.session-selected:hover {
+  cursor: pointer;
+}
+
 .add-session {
   color: #fff;
   padding: 10px;

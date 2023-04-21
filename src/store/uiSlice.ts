@@ -15,12 +15,12 @@ export interface ISession {
 }
 
 export interface UiState {
-  curSession?: string;
+  curSessionId?: string;
   Sessions: ISession[];
 }
 
 const initialState: UiState = JSON.parse(localStorage.getItem("chatHistory") || 'null') || {
-  curSession: undefined,
+  curSessionId: undefined,
   Sessions: [],
 };
 
@@ -35,10 +35,13 @@ export const uiSlice = createSlice({
         onProgress: false,
         history: [],
       });
-      state.curSession = action.payload;
+      state.curSessionId = action.payload;
+    },
+    changeCurSessionId: (state: UiState, action: PayloadAction<string>) => {
+      state.curSessionId = action.payload;
     },
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
-      const session = state.Sessions.find(session => session.id === state.curSession);
+      const session = state.Sessions.find(session => session.id === state.curSessionId);
       if (session) {
         session.curQuestion = action.payload;
         session.history.push({
@@ -49,7 +52,7 @@ export const uiSlice = createSlice({
       }
     },
     changeCurAnswer: (state: UiState, action: PayloadAction<string>) => {
-      const session = state.Sessions.find(session => session.id === state.curSession);
+      const session = state.Sessions.find(session => session.id === state.curSessionId);
       if (session) {
         if (session.history[session.history.length - 1].msgType === 'question') {
           session.history.push({
@@ -64,7 +67,7 @@ export const uiSlice = createSlice({
       }
     },
     changeOnProgress: (state: UiState, action: PayloadAction<boolean>) => {
-      const session = state.Sessions.find(session => session.id === state.curSession);
+      const session = state.Sessions.find(session => session.id === state.curSessionId);
       if (session) {
         session.onProgress = action.payload;
       }
@@ -79,6 +82,8 @@ export const localStorageMiddleware: Middleware = store => next => action => {
   return result;
 }
 
-export const selectSendMsg = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.curQuestion;
-export const selectHistory = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.history;
-export const selectOnProgress = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.onProgress;
+export const selectSendMsg = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSessionId)?.curQuestion;
+export const selectHistory = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSessionId)?.history;
+export const selectOnProgress = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSessionId)?.onProgress;
+export const selectSessionIds = (state: rootState) => state.ui.Sessions.map(session => session.id);
+export const selectCurSessionId = (state: rootState) => state.ui.curSessionId;
