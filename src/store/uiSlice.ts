@@ -28,6 +28,15 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: initialState,
   reducers: {
+    addSession: (state: UiState, action: PayloadAction<string>) => {
+      state.Sessions.push({
+        id: action.payload,
+        curQuestion: '',
+        onProgress: false,
+        history: [],
+      });
+      state.curSession = action.payload;
+    },
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
       const session = state.Sessions.find(session => session.id === state.curSession);
       if (session) {
