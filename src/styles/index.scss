@@ -9,11 +9,11 @@ body {
 }
 
 .question {
-  padding: 30px 30vw;
+  padding: 30px 25vw;
 }
 
 .answer {
-  padding: 30px 30vw;
+  padding: 30px 25vw;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   background-color: #f7f7f7;
@@ -76,7 +76,7 @@ body {
 .text-input {
   position: absolute;
   top: 1vh;
-  width: 42%;
+  width: 48%;
   padding-top: 12px !important;
   padding-bottom: 12px !important;
   box-shadow: 1px 1px 8px #aaa;
@@ -102,4 +102,41 @@ body {
   top: 3.5vh;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.session-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 14%;
+  background-color: rgb(32, 33, 35);
+}
+
+.chat-board {
+  width: 86%;
+}
+
+.session {
+  color: #fff;
+  padding: 10px;
+  margin: 3px 7px;
+  border-radius: 6px;
+}
+
+.session:hover {
+  background-color: rgb(42, 43, 50);
+  cursor: pointer;
+}
+
+.add-session {
+  color: #fff;
+  padding: 10px;
+  margin: 7px 7px 3px 5px;
+  border-radius: 6px;
+  border: 1px solid hsla(0, 0%, 100%, .2);
+}
+
+.add-session:hover {
+  background-color: hsla(240, 9%, 59%, .1);
+  cursor: pointer;
 }

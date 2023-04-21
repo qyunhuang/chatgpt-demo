@@ -7,44 +7,58 @@ export interface IMsg {
   msgType: 'question' | 'answer';
 }
 
-export interface UiState {
+export interface ISession {
+  id: string;
   curQuestion: string;
   onProgress: boolean;
   history: IMsg[];
 }
 
-const initialState: UiState = {
-  curQuestion: "",
-  onProgress: false,
-  history: localStorage.getItem("chatHistory") ? JSON.parse(localStorage.getItem("chatHistory") as string) : [],
+export interface UiState {
+  curSession?: string;
+  Sessions: ISession[];
 }
+
+const initialState: UiState = JSON.parse(localStorage.getItem("chatHistory") || 'null') || {
+  curSession: undefined,
+  Sessions: [],
+};
 
 export const uiSlice = createSlice({
   name: "ui",
   initialState: initialState,
   reducers: {
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
-      state.curQuestion = action.payload;
-      state.history.push({
-        id: state.history.length,
-        msg: action.payload,
-        msgType: 'question',
-      });
+      const session = state.Sessions.find(session => session.id === state.curSession);
+      if (session) {
+        session.curQuestion = action.payload;
+        session.history.push({
+          id: session.history.length,
+          msg: action.payload,
+          msgType: 'question',
+        });
+      }
     },
     changeCurAnswer: (state: UiState, action: PayloadAction<string>) => {
-      if (state.history[state.history.length - 1].msgType === 'question') {
-        state.history.push({
-          id: state.history.length,
-          msg: action.payload,
-          msgType: 'answer',
-        });
-        return;
-      }
+      const session = state.Sessions.find(session => session.id === state.curSession);
+      if (session) {
+        if (session.history[session.history.length - 1].msgType === 'question') {
+          session.history.push({
+            id: session.history.length,
+            msg: action.payload,
+            msgType: 'answer',
+          });
+          return;
+        }
 
-      state.history[state.history.length - 1].msg = action.payload;
+        session.history[session.history.length - 1].msg = action.payload;
+      }
     },
     changeOnProgress: (state: UiState, action: PayloadAction<boolean>) => {
-      state.onProgress = action.payload;
+      const session = state.Sessions.find(session => session.id === state.curSession);
+      if (session) {
+        session.onProgress = action.payload;
+      }
     }
   },
 });
@@ -52,10 +66,10 @@ export const uiSlice = createSlice({
 export const localStorageMiddleware: Middleware = store => next => action => {
   const result = next(action);
 
-  localStorage.setItem("chatHistory", JSON.stringify(store.getState().ui.history));
+  localStorage.setItem("chatHistory", JSON.stringify(store.getState().ui));
   return result;
 }
 
-export const selectSendMsg = (state: rootState) => state.ui.curQuestion;
-export const selectHistory = (state: rootState) => state.ui.history;
-export const selectOnProgress = (state: rootState) => state.ui.onProgress;
+export const selectSendMsg = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.curQuestion;
+export const selectHistory = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.history;
+export const selectOnProgress = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSession)?.onProgress;

@@ -19,7 +19,9 @@ const ChatBoard = () => {
 
   React.useEffect(() => {
     const getAns = async () => {
-      if (chatHistory.length % 2 === 0) {
+      if (!sendMsg) return;
+
+      if (chatHistory && chatHistory.length % 2 === 0) {
         return;
       }
 
@@ -68,7 +70,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, chatHistory.length]);
+  }, [sendMsg, dispatch, chatHistory]);
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({
@@ -139,7 +141,7 @@ const ChatBoard = () => {
     );
   });
 
-  const chatHistoryList = chatHistory.map((item, index) => {
+  const chatHistoryList =  chatHistory?.map((item, index) => {
     return (
       <Box key={index} className={item.msgType === 'question' ? 'question' : 'answer'}>
         {codeBlocks(item.msg)}
