@@ -40,6 +40,15 @@ export const uiSlice = createSlice({
     changeCurSessionId: (state: UiState, action: PayloadAction<string>) => {
       state.curSessionId = action.payload;
     },
+    renameSession: (state: UiState, action: PayloadAction<{ id: string, name: string }>) => {
+      const session = state.Sessions.find(session => session.id === action.payload.id);
+      if (session) {
+        session.id = action.payload.name;
+      }
+    },
+    deleteSession: (state: UiState, action: PayloadAction<string>) => {
+      state.Sessions = state.Sessions.filter(session => session.id !== action.payload);
+    },
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
       const session = state.Sessions.find(session => session.id === state.curSessionId);
       if (session) {

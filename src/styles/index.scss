@@ -121,20 +121,20 @@ body {
   padding: 10px;
   margin: 3px 7px;
   border-radius: 6px;
-}
 
-.session:hover {
-  background-color: rgb(42, 43, 50);
-  cursor: pointer;
+  &:hover {
+    background-color: rgb(42, 43, 50);
+    cursor: pointer;
+  }
 }
 
 .session-selected {
   @extend .session;
   background-color: rgba(52, 53, 65);
-}
 
-.session-selected:hover {
-  cursor: pointer;
+  &:hover {
+    background-color: rgba(52, 53, 65);
+  }
 }
 
 .add-session {
@@ -143,9 +143,9 @@ body {
   margin: 7px 7px 3px 5px;
   border-radius: 6px;
   border: 1px solid hsla(0, 0%, 100%, .2);
-}
 
-.add-session:hover {
-  background-color: hsla(240, 9%, 59%, .1);
-  cursor: pointer;
+  &:hover {
+    background-color: hsla(240, 9%, 59%, .1);
+    cursor: pointer;
+  }
 }

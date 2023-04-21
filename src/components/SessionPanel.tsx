@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Stack, Typography } from '@mui/material';
-import { ChatBubbleOutline, Add } from "@mui/icons-material";
+import { ChatBubbleOutline, Add, DriveFileRenameOutline, DeleteOutlined } from "@mui/icons-material";
 import { v4 as uuidv4 } from 'uuid';
 import { uiSlice, selectSessionIds, selectCurSessionId } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,10 @@ const SessionPanel = () => {
 
   const handleSelectSession = (id: string) => {
     dispatch(uiSlice.actions.changeCurSessionId(id));
+  }
+
+  const handleDeleteSession = (id: string) => {
+    dispatch(uiSlice.actions.deleteSession(id));
   }
 
   const addSession = (
@@ -36,11 +40,18 @@ const SessionPanel = () => {
   const sessions = sessionIds.map((item, index) => {
     return (
       <Stack key={index} className={curSessionId === item ? 'session-selected' : 'session'}
-             direction={'row'} alignItems={'center'} spacing={1.5} onClick={() => handleSelectSession(item)}>
-        <ChatBubbleOutline sx={{ fontSize: 16 }} />
-        <Typography key={index} fontSize={14}>
-          {item}
-        </Typography>
+             direction={'row'} justifyContent={'space-between'}
+             onClick={() => handleSelectSession(item)}>
+        <Stack direction={'row'} alignItems={'center'} spacing={1.5}>
+          <ChatBubbleOutline sx={{ fontSize: 16 }} />
+          <Typography key={index} fontSize={14}>
+            {item.slice(0, 20)}
+          </Typography>
+        </Stack>
+        <Stack direction={'row'} alignItems={'center'} spacing={0.5}>
+          <DriveFileRenameOutline sx={{ fontSize: 16 }} />
+          <DeleteOutlined sx={{ fontSize: 16 }} onClick={() => handleDeleteSession(item)} />
+        </Stack>
       </Stack>
     );
   });
