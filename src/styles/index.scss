@@ -102,22 +102,53 @@ body {
   top: 3.5vh;
   left: 50%;
   transform: translateX(-50%);
+
+  &.MuiIconButton-root {
+    color: rgb(64, 65, 79);
+    background-color: white;
+    text-transform: none;
+    font-size: 14px;
+    border-radius: 1px;
+    border: 1px solid #ddd;
+
+    &:hover {
+      background-color: rgb(236, 236, 241);
+      color: rgb(64, 65, 79);
+    }
+  }
 }
 
 .session-panel {
   position: sticky;
   top: 0;
   height: 100vh;
-  width: 14%;
+  width: 17%;
   background-color: rgb(32, 33, 35);
 }
 
+.session-list {
+  overflow: hidden;
+
+  &:hover {
+    overflow-y: auto;
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: rgb(86, 88, 105);
+
+      &:hover {
+        background-color: rgba(217, 217, 227, 0.8);
+      }
+    }
+  }
+}
+
 .chat-board {
-  width: 86%;
+  width: 83%;
 }
 
 .session {
-  color: #fff;
+  color: rgb(236, 236, 241);
   padding: 10px;
   margin: 3px 7px;
   border-radius: 6px;
@@ -134,6 +165,18 @@ body {
 
   &:hover {
     background-color: rgba(52, 53, 65);
+  }
+}
+
+.session-icon {
+  color: rgb(197, 197, 210);
+
+  &:hover {
+      color: white;
+  }
+
+  &.MuiSvgIcon-root {
+    font-size: 20px;
   }
 }
 

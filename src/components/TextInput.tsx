@@ -32,12 +32,7 @@ const TextInput = () => {
 
   return (
     <Box className={'input-container'}>
-      <IconButton
-        className={'generate-button'}
-        sx={{ color: 'rgba(64 ,65, 79)', bgcolor: 'white', textTransform: 'none',
-          fontSize: 15, borderRadius: 1, border: '1px solid #ddd',
-          '&:hover': { bgcolor: 'rgb(236, 236, 241)', color: 'rgb(64, 65, 79)' } }}
-      >
+      <IconButton className={'generate-button'}>
         {onProgress ? <><CropSquare sx={{fontSize: 16, mr: 1}}/>Stop generating</> :
           <><Loop sx={{fontSize: 16, mr: 1}}/>Regenerate response</>}
       </IconButton>

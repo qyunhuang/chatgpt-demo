@@ -10,7 +10,7 @@ const SessionPanel = () => {
   const sessionIds = useSelector(selectSessionIds);
   const curSessionId = useSelector(selectCurSessionId);
   const sessionNames = useSelector(selectSessionNames);
-  const [isEditingArr, setIsEditingArr] = React.useState<{ [key: string]: boolean }>({});
+  const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const sessionNameRefs = React.useRef<{ [key: string]: HTMLSpanElement | null }>({});
 
   const handleAddSession = () => {
@@ -28,7 +28,7 @@ const SessionPanel = () => {
   const handleRenameSession = (e: React.FormEvent<HTMLSpanElement>, id: string) => {
     const name = (e.target as HTMLSpanElement).innerText;
     dispatch(uiSlice.actions.renameSession({ id, name }));
-    setIsEditingArr({ ...isEditingArr, [id]: false });
+    setIsEditing(false);
   }
 
   const handleRenameSessionKey = (e: React.KeyboardEvent<HTMLSpanElement>, id: string) => {
@@ -37,12 +37,12 @@ const SessionPanel = () => {
       const name = (e.target as HTMLSpanElement).innerText;
       dispatch(uiSlice.actions.renameSession({ id, name }));
       (e.target as HTMLSpanElement).blur();
-      setIsEditingArr({ ...isEditingArr, [id]: false });
+      setIsEditing(false);
     }
   }
 
   const handleEditSessionName = (id: string) => {
-    setIsEditingArr({ ...isEditingArr, [id]: true });
+    setIsEditing(true);
     setTimeout(() => {
       sessionNameRefs.current[id]?.focus();
     }, 0);
@@ -64,8 +64,6 @@ const SessionPanel = () => {
   );
 
   const sessions = sessionIds.map((item, index) => {
-    const isEditing = isEditingArr[item];
-
     return (
       <Stack key={index} className={curSessionId === item ? 'session-selected' : 'session'}
              direction={'row'} justifyContent={'space-between'}
@@ -84,12 +82,12 @@ const SessionPanel = () => {
             {sessionNames[index]}
           </Typography>
         </Stack>
-          {isEditing ?
-          <Check sx={{fontSize: 16}} onClick={() => handleEditSessionName(item)}/> :
+          {curSessionId === item && (isEditing ?
+          <Check className={'session-icon'} onClick={() => handleEditSessionName(item)}/> :
           <Stack direction={'row'} spacing={0.5}>
-            <DriveFileRenameOutline sx={{fontSize: 16}} onClick={() => handleEditSessionName(item)}/>
-            <DeleteOutlined sx={{fontSize: 16}} onClick={() => handleDeleteSession(item)}/>
-          </Stack>}
+            <DriveFileRenameOutline className={'session-icon'} onClick={() => handleEditSessionName(item)}/>
+            <DeleteOutlined className={'session-icon'} onClick={() => handleDeleteSession(item)}/>
+          </Stack>)}
       </Stack>
     );
   });
@@ -97,7 +95,9 @@ const SessionPanel = () => {
   return (
     <Stack className={'session-panel'}>
       {addSession}
-      {sessions}
+      <Stack className={'session-list'}>
+        {sessions}
+      </Stack>
     </Stack>
   );
 };
