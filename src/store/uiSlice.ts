@@ -9,6 +9,7 @@ export interface IMsg {
 
 export interface ISession {
   id: string;
+  name: string;
   curQuestion: string;
   onProgress: boolean;
   history: IMsg[];
@@ -31,6 +32,7 @@ export const uiSlice = createSlice({
     addSession: (state: UiState, action: PayloadAction<string>) => {
       state.Sessions.push({
         id: action.payload,
+        name: 'New chat',
         curQuestion: '',
         onProgress: false,
         history: [],
@@ -43,7 +45,7 @@ export const uiSlice = createSlice({
     renameSession: (state: UiState, action: PayloadAction<{ id: string, name: string }>) => {
       const session = state.Sessions.find(session => session.id === action.payload.id);
       if (session) {
-        session.id = action.payload.name;
+        session.name = action.payload.name;
       }
     },
     deleteSession: (state: UiState, action: PayloadAction<string>) => {
@@ -95,4 +97,5 @@ export const selectSendMsg = (state: rootState) => state.ui.Sessions.find(sessio
 export const selectHistory = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSessionId)?.history;
 export const selectOnProgress = (state: rootState) => state.ui.Sessions.find(session => session.id === state.ui.curSessionId)?.onProgress;
 export const selectSessionIds = (state: rootState) => state.ui.Sessions.map(session => session.id);
+export const selectSessionNames = (state: rootState) => state.ui.Sessions.map(session => session.name);
 export const selectCurSessionId = (state: rootState) => state.ui.curSessionId;
