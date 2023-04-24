@@ -38,7 +38,7 @@ const CodeBlock = (props: ICodeBlockProps) => {
         language={language}
         style={oneDark}
         wrapLines={true}
-        customStyle={{ marginTop: 0, marginBottom: 20, borderTopLeftRadius: 0, borderTopRightRadius: 0,
+        customStyle={{ marginTop: 0, marginBottom: 0, borderTopLeftRadius: 0, borderTopRightRadius: 0,
           backgroundColor: 'black', fontSize: '0.875em' }}
       >
         {code}

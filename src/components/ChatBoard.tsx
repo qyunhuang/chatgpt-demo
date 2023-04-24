@@ -84,10 +84,10 @@ const ChatBoard = () => {
     }
   }, [ans, onProgress, throttledScrollToBottom]);
 
-  const emphasisBlocks = (text: string) => text.split('`').map((item, index) => {
+  const textBlocks = (text: string) => text.split('`').map((item, index) => {
     if (index % 2 === 0) {
       return (
-        <Typography component={'span'} key={index}>
+        <Typography whiteSpace="pre-wrap" component={'span'} key={index}>
           {item}
         </Typography>
       );
@@ -100,43 +100,23 @@ const ChatBoard = () => {
     );
   });
 
-  const echartsOption = (code: string): null | object => {
-    if (!code.split('option = ')[1]) {
-      return null;
-    }
 
-    const option = code.split('option = ')[1]
-      .replace(/\/\/.*$/gm, '')  // remove comments
-      .replace(/(\b\w+\b)(?=:)/g, '"$1"')  // add double quotes to keys
-      .replace(/'/g, '"')  // replace single quotes with double quotes
-      .replace(/\n/g, "")  // remove \n
-      .replace(/[^\S\r\n]/g, '')  // remove whitespace
-      .replace(/;/g, "");  // remove ;
-
-    if (!option.match(/^{.*}$/)) {
-      return null;
-    }
-
-    return JSON.parse(option);
-  }
-
-  const codeBlocks = (text: string) => text.split('```').map((item, index) => {
+  const chatMsg = (text: string) => text.split('```').map((item, index) => {
     if (index % 2 === 0) {
       return (
         <React.Fragment key={index}>
-          {emphasisBlocks(item)}
+          {textBlocks(item)}
         </React.Fragment>
       );
     }
 
     const lang = item.split('\n')[0] || 'jsx';
     const code = item.slice(item.indexOf('\n') + 1);
-    const option = echartsOption(code);
 
     return (
       <Stack key={index}>
         <CodeBlock code={code} language={lang} />
-        {option && <Echart option={option} />}
+        <Echart option={code} />
       </Stack>
     );
   });
@@ -144,7 +124,7 @@ const ChatBoard = () => {
   const chatHistoryList =  chatHistory?.map((item, index) => {
     return (
       <Box key={index} className={item.msgType === 'question' ? 'question' : 'answer'}>
-        {codeBlocks(item.msg)}
+        {chatMsg(item.msg)}
       </Box>
     );
   });

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { OutlinedInput, IconButton, InputAdornment, Box, Stack, Container, Typography } from "@mui/material";
+import { OutlinedInput, IconButton, InputAdornment, Box, Stack, Container,
+  Typography, CircularProgress } from "@mui/material";
 import { Send, Loop, CropSquare } from "@mui/icons-material";
 import { uiSlice, selectOnProgress } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,12 +48,12 @@ const TextInput = () => {
           value={text}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton
+              {!onProgress ? <IconButton
                 disabled={text === ""}
                 onClick={handleSend}
               >
                 <Send fontSize={'small'} sx={{ transform: 'rotate(-45deg)' }} />
-              </IconButton>
+              </IconButton> : <CircularProgress size={20} variant="indeterminate" sx={{color: 'grey'}} />}
             </InputAdornment>
           }
         />
