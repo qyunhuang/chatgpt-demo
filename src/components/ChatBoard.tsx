@@ -88,7 +88,7 @@ const ChatBoard = () => {
     if (index % 2 === 0) {
       return (
         <Typography whiteSpace="pre-wrap" component={'span'} key={index}>
-          {item}
+          {item.replace(/^\s+|\s+$/g, '')}
         </Typography>
       );
     }
