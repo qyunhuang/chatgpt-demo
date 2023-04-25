@@ -4,6 +4,7 @@ import './styles/index.scss';
 import App from './app/App';
 import { store } from "./store";
 import { Provider } from 'react-redux';
+import { BrowserRouter } from "react-router-dom";
 
 window.Buffer = window.Buffer || require("buffer").Buffer;
 
@@ -12,6 +13,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
 );

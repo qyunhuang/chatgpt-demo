@@ -4,12 +4,14 @@ import { ChatBubbleOutline, Add, DriveFileRenameOutline, DeleteOutlined, Check }
 import { v4 as uuidv4 } from 'uuid';
 import { uiSlice, selectSessionIds, selectCurSessionId, selectSessionNames } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom'
 
 const SessionPanel = () => {
   const dispatch = useDispatch();
   const sessionIds = useSelector(selectSessionIds);
   const curSessionId = useSelector(selectCurSessionId);
   const sessionNames = useSelector(selectSessionNames);
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const sessionNameRefs = React.useRef<{ [key: string]: HTMLSpanElement | null }>({});
 
@@ -19,6 +21,7 @@ const SessionPanel = () => {
 
   const handleSelectSession = (id: string) => {
     dispatch(uiSlice.actions.changeCurSessionId(id));
+    navigate(`/${id}`);
   }
 
   const handleDeleteSession = (id: string) => {

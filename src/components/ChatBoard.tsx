@@ -9,6 +9,8 @@ import { uiSlice } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
 import { useThrottledCallback } from "use-debounce";
 import Echart from "./Echart";
+import { useParams } from "react-router-dom";
+import TextInput from "./TextInput";
 
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
@@ -16,6 +18,13 @@ const ChatBoard = () => {
   const sendMsg = useSelector(selectSendMsg);
   const chatHistory = useSelector(selectHistory);
   const dispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(uiSlice.actions.changeCurSessionId(id));
+    }
+  }, [id, dispatch]);
 
   React.useEffect(() => {
     const getAns = async () => {
@@ -130,9 +139,12 @@ const ChatBoard = () => {
   });
 
   return (
-    <Stack>
-      {chatHistoryList}
-    </Stack>
+    <>
+      <Stack>
+        {chatHistoryList}
+      </Stack>
+      <TextInput />
+    </>
   );
 }
 
