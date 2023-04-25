@@ -170,6 +170,11 @@ body {
   &:hover {
     background-color: rgba(52, 53, 65);
   }
+
+  .session-name-editing {
+    width: 160px;
+    outline: 2px solid #2b4fa1;
+  }
 }
 
 .session-icon {

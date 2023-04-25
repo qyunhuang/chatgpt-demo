@@ -15,13 +15,18 @@ const SessionPanel = () => {
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
   const sessionNameRefs = React.useRef<{ [key: string]: HTMLSpanElement | null }>({});
 
+  React.useEffect(() => {
+    if (curSessionId) {
+      navigate(`/${curSessionId}`);
+    }
+  }, [curSessionId, navigate]);
+
   const handleAddSession = () => {
     dispatch(uiSlice.actions.addSession(uuidv4()));
   }
 
   const handleSelectSession = (id: string) => {
     dispatch(uiSlice.actions.changeCurSessionId(id));
-    navigate(`/${id}`);
   }
 
   const handleDeleteSession = (id: string) => {
@@ -49,6 +54,13 @@ const SessionPanel = () => {
     setTimeout(() => {
       sessionNameRefs.current[id]?.focus();
     }, 0);
+
+    const range = document.createRange();
+    range.selectNodeContents(sessionNameRefs.current[id] as Node);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel?.removeAllRanges();
+    sel?.addRange(range);
   }
 
   const addSession = (
@@ -77,6 +89,7 @@ const SessionPanel = () => {
             key={index}
             ref={(element) => sessionNameRefs.current[item] = element}
             contentEditable={isEditing}
+            className={isEditing ? 'session-name-editing' : 'session-name'}
             suppressContentEditableWarning={true}
             onBlur={(event) => handleRenameSession(event, item)}
             onKeyDown={(event) => handleRenameSessionKey(event, item)}
