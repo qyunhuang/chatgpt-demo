@@ -39,7 +39,7 @@ const CodeBlock = (props: ICodeBlockProps) => {
         style={oneDark}
         wrapLines={true}
         customStyle={{ marginTop: 0, marginBottom: 40, borderTopLeftRadius: 0, borderTopRightRadius: 0,
-          backgroundColor: 'black', fontSize: '0.875em' }}
+          backgroundColor: 'black', fontSize: '0.925em', paddingLeft: 0 }}
       >
         {code}
       </SyntaxHighlighter>

@@ -52,16 +52,16 @@ body {
   margin-top: 20px;
 
   .lang {
-    color: #fff;
     font-size: 10px;
-    margin-left: 15px;
+    margin-left: 25px;
+    color: rgb(217, 217, 227);
   }
 
   .copy-button {
     background-color: transparent;
-    color: #fff;
     font-size: 10px;
-    margin-right: 5px;
+    margin-right: 15px;
+    color: rgb(217, 217, 227);
   }
 }
 
@@ -132,9 +132,9 @@ body {
   &:hover {
     overflow-y: auto;
 
-    .session {
-      width: calc((100% + 8px - 20px - 14px));
-    }
+    //.session {
+    //  width: calc((100% + 8px - 20px - 14px));
+    //}
 
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;

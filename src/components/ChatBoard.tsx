@@ -120,7 +120,7 @@ const ChatBoard = () => {
     }
 
     const lang = item.split('\n')[0] || 'jsx';
-    const code = item.slice(item.indexOf('\n') + 1);
+    const code = item.slice(item.indexOf('\n') + 1).replace(/\n(?!.*\n)/, "");
 
     return (
       <Stack key={index}>
