@@ -4,11 +4,12 @@ import SlideDownButton from "../components/SlideDownButton";
 import SessionPanel from "../components/SessionPanel";
 import { Stack } from '@mui/material';
 import { Route, Routes } from "react-router-dom";
+import FlaskTest from '../components/FlaskTest';
 
 const App = () => {
   return (
     <>
-      <Stack direction={'row'}>
+      {/* <Stack direction={'row'}>
         <SessionPanel />
         <Stack className={'chat-board'}>
           <Routes>
@@ -17,7 +18,8 @@ const App = () => {
           </Routes>
         </Stack>
       </Stack>
-      <SlideDownButton />
+      <SlideDownButton /> */}
+      <FlaskTest />
     </>
   );
 };
