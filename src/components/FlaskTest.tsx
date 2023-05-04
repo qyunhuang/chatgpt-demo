@@ -8,7 +8,13 @@ const FlaskTest = () => {
 
   return (
     <>
-      <h1>{data?.users[0]}</h1>
+      {data?.users.map((user: any, idx: number) => {
+        return (
+          <div key={idx}>
+            <h1>{user}</h1>
+          </div>
+        );
+      })}
     </>
   );
 };
