@@ -9,7 +9,7 @@ import FlaskTest from '../components/FlaskTest';
 const App = () => {
   return (
     <>
-      {/* <Stack direction={'row'}>
+      <Stack direction={'row'}>
         <SessionPanel />
         <Stack className={'chat-board'}>
           <Routes>
@@ -18,8 +18,8 @@ const App = () => {
           </Routes>
         </Stack>
       </Stack>
-      <SlideDownButton /> */}
-      <FlaskTest />
+      <SlideDownButton />
+      {/* <FlaskTest /> */}
     </>
   );
 };

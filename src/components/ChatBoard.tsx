@@ -11,6 +11,7 @@ import { useThrottledCallback } from "use-debounce";
 import Echart from "./Echart";
 import { useParams } from "react-router-dom";
 import TextInput from "./TextInput";
+import { addMessage } from "../utils/request";
 
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
@@ -53,19 +54,19 @@ const ChatBoard = () => {
         },
       });
 
-      const res = await api.sendMessage(sendMsg, {
+      await api.sendMessage(sendMsg, {
         onProgress: r => {
           setOnProgress(true);
           dispatch(uiSlice.actions.changeOnProgress(true));
           setAns(r.text);
           dispatch(uiSlice.actions.changeCurAnswer(r.text));
         },
+      }).then((res) => {
+        console.log(res.text);
+        setOnProgress(false);
+        dispatch(uiSlice.actions.changeOnProgress(false));
+        addMessage(1, res.text, false);
       });
-
-      console.log(res.text);
-
-      setOnProgress(false);
-      dispatch(uiSlice.actions.changeOnProgress(false));
 
       window.scrollTo({
         top: document.body.scrollHeight

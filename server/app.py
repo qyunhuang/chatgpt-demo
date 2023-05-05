@@ -19,10 +19,16 @@ MYSQL_DB = os.environ.get('MYSQL_DB')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}'
 db.init_app(app)
 api.init_app(app)
-CORS(app)
+CORS(app, origins='*')
 
 user_id = api.model('user_id', {
     'user_id': fields.Integer(required=True, description='user id')
+})
+
+add_message = api.model('add_message', {
+    'session_id': fields.Integer(required=True, description='session id'),
+    'content': fields.String(required=True, description='message content'),
+    'question': fields.Boolean(required=True, description='is question')
 })
 
 @ns.route('/test')
@@ -44,7 +50,9 @@ class ListUsers(Resource):
     
 @ns.route('/message_add')
 class AddMessage(Resource):
+    @api.expect(add_message)
     def post(self):
+        print(request.json)
         session_id = request.json.get('session_id')
         content = request.json.get('content')
         question = request.json.get('question')

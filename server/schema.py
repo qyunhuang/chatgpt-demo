@@ -22,6 +22,7 @@ class User(db.Model):
 class Session(db.Model):
     
     __tablename__ = 'session'
+    __allow_unmapped__ = True
     
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     user_id: int = sa.Column(sa.Integer, ForeignKey('user.id'), nullable=False)
@@ -34,6 +35,7 @@ class Session(db.Model):
 class Message(db.Model):
     
     __tablename__ = 'message'
+    __allow_unmapped__ = True
     
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     session_id: int = sa.Column(sa.Integer, ForeignKey('session.id'), nullable=False)
