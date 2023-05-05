@@ -16,8 +16,9 @@ class User(db.Model):
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     name: str = sa.Column(sa.String(20), nullable=False)
     password: str = sa.Column(sa.String(20), nullable=False)
-    
-     
+ 
+   
+@dataclass     
 class Session(db.Model):
     
     __tablename__ = 'session'
@@ -26,9 +27,10 @@ class Session(db.Model):
     user_id: int = sa.Column(sa.Integer, ForeignKey('user.id'), nullable=False)
     name: str = sa.Column(sa.String(20), nullable=False)
     created_at: datetime = sa.Column(sa.DateTime, nullable=False, default=datetime.now)
-    user: User = relationship('User', backref='sessions')
+    user: User = relationship('User', backref='sessions') 
     
-
+    
+@dataclass
 class Message(db.Model):
     
     __tablename__ = 'message'
