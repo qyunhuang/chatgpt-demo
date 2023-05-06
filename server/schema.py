@@ -3,7 +3,7 @@ from xmlrpc.client import boolean
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from dataclasses import dataclass
 
 db = SQLAlchemy()
@@ -24,7 +24,7 @@ class Session(db.Model):
     __tablename__ = 'session'
     __allow_unmapped__ = True
     
-    id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
+    id: str = sa.Column(sa.String(36), primary_key=True)
     user_id: int = sa.Column(sa.Integer, ForeignKey('user.id'), nullable=False)
     name: str = sa.Column(sa.String(20), nullable=False)
     created_at: datetime = sa.Column(sa.DateTime, nullable=False, default=datetime.now)
@@ -38,8 +38,9 @@ class Message(db.Model):
     __allow_unmapped__ = True
     
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-    session_id: int = sa.Column(sa.Integer, ForeignKey('session.id'), nullable=False)
+    session_id: str = sa.Column(sa.String(36), ForeignKey('session.id'), nullable=False)
     content: str = sa.Column(sa.Text, nullable=False)
     question: boolean = sa.Column(sa.Boolean, nullable=False)
     created_at: datetime = sa.Column(sa.DateTime, nullable=False, default=datetime.now)
-    session: Session = relationship('Session', backref='messages')
+    session = db.relationship('Session', backref=backref('messages', cascade='all, delete-orphan'))
+

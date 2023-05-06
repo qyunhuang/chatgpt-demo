@@ -3,7 +3,7 @@ import { config } from "../config/config";
 import { ChatGPTAPI } from "chatgpt";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { Stack, Typography, Box } from "@mui/material";
-import { selectSendMsg, selectHistory } from "../store/uiSlice";
+import { selectSendMsg, selectHistory, selectCurSessionId } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { uiSlice } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
@@ -18,6 +18,7 @@ const ChatBoard = () => {
   const [onProgress, setOnProgress] = React.useState<boolean>(false);
   const sendMsg = useSelector(selectSendMsg);
   const chatHistory = useSelector(selectHistory);
+  const curSessionId = useSelector(selectCurSessionId);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
 
@@ -65,7 +66,8 @@ const ChatBoard = () => {
         console.log(res.text);
         setOnProgress(false);
         dispatch(uiSlice.actions.changeOnProgress(false));
-        addMessage(1, res.text, false);
+        addMessage(curSessionId as string, sendMsg, true);
+        addMessage(curSessionId as string, res.text, false);
       });
 
       window.scrollTo({
@@ -80,7 +82,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, chatHistory]);
+  }, [sendMsg, dispatch, chatHistory, curSessionId]);
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({

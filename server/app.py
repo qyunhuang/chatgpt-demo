@@ -6,6 +6,8 @@ import click
 from flask_restx import Api, Resource, Namespace, fields
 
 app = Flask(__name__)
+CORS(app)
+
 api = Api(version='1.0', title='Chatbot API', description='A simple Chatbot API', doc='/api/doc')
 ns = Namespace('api')
 api.add_namespace(ns)
@@ -19,7 +21,6 @@ MYSQL_DB = os.environ.get('MYSQL_DB')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}'
 db.init_app(app)
 api.init_app(app)
-CORS(app, origins='*')
 
 user_id = api.model('user_id', {
     'user_id': fields.Integer(required=True, description='user id')
@@ -28,7 +29,22 @@ user_id = api.model('user_id', {
 add_message = api.model('add_message', {
     'session_id': fields.Integer(required=True, description='session id'),
     'content': fields.String(required=True, description='message content'),
-    'question': fields.Boolean(required=True, description='is question')
+    'question': fields.Boolean(required=True, description='is question or answer')
+})
+
+add_session = api.model('add_session', {
+    'session_id': fields.String(required=True, description='session id'),
+    'user_id': fields.Integer(required=True, description='user id'),
+    'name': fields.String(required=True, description='session name')
+})
+
+rename_session = api.model('rename_session', {
+    'session_id': fields.String(required=True, description='session id'),
+    'name': fields.String(required=True, description='new session name')
+})
+
+delete_session = api.model('delete_session', {
+    'session_id': fields.String(required=True, description='session id')
 })
 
 @ns.route('/test')
@@ -52,7 +68,6 @@ class ListUsers(Resource):
 class AddMessage(Resource):
     @api.expect(add_message)
     def post(self):
-        print(request.json)
         session_id = request.json.get('session_id')
         content = request.json.get('content')
         question = request.json.get('question')
@@ -60,6 +75,39 @@ class AddMessage(Resource):
         db.session.add(message)
         db.session.commit()
         return {'message': 'message added'}
+
+@ns.route('/session_add')
+class AddSession(Resource):
+    @api.expect(add_session)
+    def post(self):
+        session_id = request.json.get('session_id')
+        user_id = request.json.get('user_id')
+        name = request.json.get('name')
+        session = Session(id=session_id, user_id=user_id, name=name)
+        db.session.add(session)
+        db.session.commit()
+        return {'message': 'session added'}
+    
+@ns.route('/session_rename')
+class RenameSession(Resource):
+    @api.expect(rename_session)
+    def post(self):
+        session_id = request.json.get('session_id')
+        name = request.json.get('name')
+        session = Session.query.get(session_id)
+        session.name = name
+        db.session.commit()
+        return {'message': 'session renamed'}
+    
+@ns.route('/session_delete')
+class DeleteSession(Resource):
+    @api.expect(delete_session)
+    def post(self):
+        session_id = request.json.get('session_id')
+        session = Session.query.get(session_id)
+        db.session.delete(session)
+        db.session.commit()
+        return {'message': 'session deleted'}
     
 @app.cli.command('initdb')
 @click.option('--drop', is_flag=True, help='Create after drop.') 
@@ -69,7 +117,6 @@ def initdb(drop):
             db.drop_all()
         db.create_all()
         db.session.add(User(name='John Doe', password=''))
-        db.session.add(Session(user_id=1, name='test session'))
         db.session.commit()
     click.echo('Initialized database.')
     

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { uiSlice, selectSessionIds, selectCurSessionId, selectSessionNames } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
+import { addSession, renameSession, deleteSession } from '../utils/request';
 
 const SessionPanel = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,9 @@ const SessionPanel = () => {
   }, [curSessionId, navigate]);
 
   const handleAddSession = () => {
-    dispatch(uiSlice.actions.addSession(uuidv4()));
+    const sessionId = uuidv4();
+    dispatch(uiSlice.actions.addSession(sessionId));
+    addSession(1, sessionId);
   }
 
   const handleSelectSession = (id: string) => {
@@ -31,11 +34,13 @@ const SessionPanel = () => {
 
   const handleDeleteSession = (id: string) => {
     dispatch(uiSlice.actions.deleteSession(id));
+    deleteSession(id);
   }
 
   const handleRenameSession = (e: React.FormEvent<HTMLSpanElement>, id: string) => {
     const name = (e.target as HTMLSpanElement).innerText;
     dispatch(uiSlice.actions.renameSession({ id, name }));
+    renameSession(id, name);
     setIsEditing(false);
   }
 
@@ -44,6 +49,7 @@ const SessionPanel = () => {
       e.preventDefault();
       const name = (e.target as HTMLSpanElement).innerText;
       dispatch(uiSlice.actions.renameSession({ id, name }));
+      renameSession(id, name);
       (e.target as HTMLSpanElement).blur();
       setIsEditing(false);
     }
@@ -63,7 +69,7 @@ const SessionPanel = () => {
     sel?.addRange(range);
   }
 
-  const addSession = (
+  const addSessionButton = (
     <Stack
       className={'add-session'}
       direction={'row'}
@@ -110,7 +116,7 @@ const SessionPanel = () => {
 
   return (
     <Stack className={'session-panel'}>
-      {addSession}
+      {addSessionButton}
       <Stack className={'session-list'}>
         {sessions}
       </Stack>
