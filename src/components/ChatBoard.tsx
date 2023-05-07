@@ -12,6 +12,7 @@ import Echart from "./Echart";
 import { useParams } from "react-router-dom";
 import TextInput from "./TextInput";
 import { addMessage, selectMessage } from "../utils/request";
+import { Message } from '../types';
 
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
@@ -32,8 +33,8 @@ const ChatBoard = () => {
   // show message history when session id changes
   React.useEffect(() => {
     const getHistory = async () => {
-      const res = await selectMessage(curSessionId as string);
-      const history: IMsg[] = res.data.messages.map((msg: any, idx: number) => {
+      const messages: Message[] = (await selectMessage(curSessionId as string)).data.messages;
+      const history: IMsg[] = messages.map((msg: Message, idx: number) => {
         return {
           id: idx,
           msg: msg.content,
