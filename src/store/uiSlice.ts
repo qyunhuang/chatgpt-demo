@@ -11,6 +11,7 @@ export interface ISession {
   id: string;
   name: string;
   curQuestion: string;
+  questionRepeat: number;
   onProgress: boolean;
   history: IMsg[];
 }
@@ -39,6 +40,7 @@ export const uiSlice = createSlice({
         id: session.id,
         name: session.name,
         curQuestion: '',
+        questionRepeat: 0,
         onProgress: false,
         history: [],
       }));
@@ -49,6 +51,7 @@ export const uiSlice = createSlice({
         id: action.payload,
         name: 'New chat',
         curQuestion: '',
+        questionRepeat: 0,
         onProgress: false,
         history: [],
       });
@@ -76,6 +79,12 @@ export const uiSlice = createSlice({
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
       const session = state.sessions.find(session => session.id === state.curSessionId);
       if (session) {
+        if (session.curQuestion === action.payload) {
+          session.questionRepeat++;
+        } else {
+          session.questionRepeat = 0;
+        }
+
         session.curQuestion = action.payload;
         session.history.push({
           id: session.history.length,
@@ -98,7 +107,7 @@ export const uiSlice = createSlice({
           return;
         }
 
-        // if last msg is answer, change last msg
+        // if last msg is answer, reset last msg
         session.history[session.history.length - 1].msg = action.payload;
       }
     },
@@ -112,6 +121,7 @@ export const uiSlice = createSlice({
 });
 
 export const selectSendMsg = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.curQuestion;
+export const selectquestionRepeat = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.questionRepeat;
 export const selectHistory = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.history;
 export const selectOnProgress = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.onProgress;
 export const selectSessionIds = (state: rootState) => state.ui.sessions.map(session => session.id);

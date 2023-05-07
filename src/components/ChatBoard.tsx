@@ -3,7 +3,7 @@ import * as React from 'react';
 // import { ChatGPTAPI } from "chatgpt";
 // import { HttpsProxyAgent } from "https-proxy-agent";
 import { Stack, Typography, Box } from "@mui/material";
-import { selectSendMsg, selectCurSessionId, selectHistory } from "../store/uiSlice";
+import { selectSendMsg, selectquestionRepeat, selectCurSessionId, selectHistory } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { uiSlice, IMsg } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
@@ -17,6 +17,7 @@ const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
   const [onProgress, setOnProgress] = React.useState<boolean>(false);
   const sendMsg = useSelector(selectSendMsg);
+  const questionRepeat = useSelector(selectquestionRepeat);
   const chatHistory = useSelector(selectHistory);
   const curSessionId = useSelector(selectCurSessionId);
   const dispatch = useDispatch();
@@ -47,7 +48,6 @@ const ChatBoard = () => {
 
   React.useEffect(() => {
     const getAns = async () => {
-      console.log(sendMsg, chatHistory);
       if (!sendMsg) return;
 
       // if (chatHistory && chatHistory.length % 2 === 0) {
@@ -109,6 +109,11 @@ const ChatBoard = () => {
             setAns(text);
             dispatch(uiSlice.actions.changeCurAnswer(text.slice(0, timesRun * (text.length / timeCount))));
 
+            
+            window.scrollTo({
+              top: document.body.scrollHeight
+            });
+
             if (timesRun === timeCount) {
               clearInterval(interval);
               resolve(text);
@@ -117,15 +122,11 @@ const ChatBoard = () => {
         });
       }
 
-      await apiTest(100).then((res) => {
-        console.log(res);
+      await apiTest(50).then((res) => {
+        console.log('done');
         setOnProgress(false);
         dispatch(uiSlice.actions.changeOnProgress(false));
         addMessage(curSessionId as string, res as string, false);
-      });
-
-      window.scrollTo({
-        top: document.body.scrollHeight
       });
     };
 
@@ -136,7 +137,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, curSessionId]); // what if sendMsg is not different?
+  }, [sendMsg, dispatch, curSessionId, questionRepeat]); // what if sendMsg is not different?
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({
