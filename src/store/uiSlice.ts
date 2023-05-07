@@ -42,7 +42,7 @@ export const uiSlice = createSlice({
         onProgress: false,
         history: [],
       }));
-      state.curSessionId = action.payload[0].id;
+      state.curSessionId = action.payload[0]?.id;
     },
     addSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions.push({
@@ -65,6 +65,12 @@ export const uiSlice = createSlice({
     },
     deleteSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions = state.sessions.filter(session => session.id !== action.payload);
+    },
+    initHistory: (state: UiState, action: PayloadAction<IMsg[]>) => {
+      const session = state.sessions.find(session => session.id === state.curSessionId);
+      if (session) {
+        session.history = action.payload;
+      }
     },
     // push question to history
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {

@@ -3,9 +3,9 @@ import { config } from "../config/config";
 import { ChatGPTAPI } from "chatgpt";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { Stack, Typography, Box } from "@mui/material";
-import { selectSendMsg, selectCurSessionId } from "../store/uiSlice";
+import { selectSendMsg, selectCurSessionId, selectHistory } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
-import { uiSlice } from "../store/uiSlice";
+import { uiSlice, IMsg } from "../store/uiSlice";
 import CodeBlock from "./CodeBlock";
 import { useThrottledCallback } from "use-debounce";
 import Echart from "./Echart";
@@ -16,9 +16,8 @@ import { addMessage, selectMessage } from "../utils/request";
 const ChatBoard = () => {
   const [ans, setAns] = React.useState<string>("");
   const [onProgress, setOnProgress] = React.useState<boolean>(false);
-  const [chatHistory, setChatHistory] = React.useState<any[]>([]);
   const sendMsg = useSelector(selectSendMsg);
-  // const chatHistory = useSelector(selectHistory);
+  const chatHistory = useSelector(selectHistory);
   const curSessionId = useSelector(selectCurSessionId);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
@@ -33,11 +32,18 @@ const ChatBoard = () => {
   React.useEffect(() => {
     const getHistory = async () => {
       const res = await selectMessage(curSessionId as string);
-      setChatHistory(res.data.messages);
+      const history: IMsg[] = res.data.messages.map((msg: any, idx: number) => {
+        return {
+          id: idx,
+          msg: msg.content,
+          msgType: msg.question ? 'question' : 'answer',
+        };
+      });
+      dispatch(uiSlice.actions.initHistory(history));
     };
 
     getHistory();
-  }, [curSessionId]);
+  }, [curSessionId, dispatch]);
 
   React.useEffect(() => {
     const getAns = async () => {
@@ -68,6 +74,7 @@ const ChatBoard = () => {
       });
 
       await api.sendMessage(sendMsg, {
+        systemMessage: '',
         onProgress: r => {
           setOnProgress(true);
           dispatch(uiSlice.actions.changeOnProgress(true));
@@ -78,7 +85,6 @@ const ChatBoard = () => {
         console.log(res.text);
         setOnProgress(false);
         dispatch(uiSlice.actions.changeOnProgress(false));
-        // addMessage(curSessionId as string, sendMsg, true);
         addMessage(curSessionId as string, res.text, false);
       });
 
@@ -94,7 +100,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, chatHistory, curSessionId]);
+  }, [sendMsg, dispatch, curSessionId]);
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({
@@ -147,23 +153,16 @@ const ChatBoard = () => {
 
   const chatHistoryList = chatHistory?.map((item, index) => {
     return (
-      <Box key={index} className={item.question ? 'question' : 'answer'}>
-        {chatMsg(item.content)}
+      <Box key={index} className={item.msgType === 'question' ? 'question' : 'answer'}>
+        {chatMsg(item.msg)}
       </Box>
     );
   });
-
-  const curAns = (
-    <Box className={'answer'}>
-        {ans}
-    </Box>
-  );
 
   return (
     <>
       <Stack>
         {chatHistoryList}
-        {onProgress && curAns}
       </Stack>
       <TextInput />
     </>

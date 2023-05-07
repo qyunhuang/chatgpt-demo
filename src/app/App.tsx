@@ -4,7 +4,6 @@ import SlideDownButton from "../components/SlideDownButton";
 import SessionPanel from "../components/SessionPanel";
 import { Stack } from '@mui/material';
 import { Route, Routes } from "react-router-dom";
-import FlaskTest from '../components/FlaskTest';
 
 const App = () => {
   return (
@@ -19,7 +18,6 @@ const App = () => {
         </Stack>
       </Stack>
       <SlideDownButton />
-      {/* <FlaskTest /> */}
     </>
   );
 };
