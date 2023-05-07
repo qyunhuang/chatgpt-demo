@@ -21,6 +21,7 @@ const ChatBoard = () => {
   const questionRepeat = useSelector(selectquestionRepeat);
   const chatHistory = useSelector(selectHistory);
   const curSessionId = useSelector(selectCurSessionId);
+  const prevSessionId = React.useRef<string>("");
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
 
@@ -48,6 +49,11 @@ const ChatBoard = () => {
   }, [curSessionId, dispatch]);
 
   React.useEffect(() => {
+    // when session id changes, don't send message
+    if (prevSessionId.current !== curSessionId) {
+      prevSessionId.current = curSessionId as string;
+      return;
+    }
     const getAns = async () => {
       if (!sendMsg) return;
 
@@ -131,14 +137,14 @@ const ChatBoard = () => {
       });
     };
 
-    if (sendMsg) {
+    if (sendMsg && sendMsg !== '') {
       getAns();
 
       window.scrollTo({
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, curSessionId, questionRepeat]); // what if sendMsg is not different?
+  }, [sendMsg, dispatch, questionRepeat]);
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({

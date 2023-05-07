@@ -33,7 +33,6 @@ const SessionPanel = () => {
   }, [curSessionId, navigate]);
 
   const handleAddSession = () => {
-    console.log('add session');
     const sessionId = uuidv4();
     dispatch(uiSlice.actions.addSession(sessionId));
     addSession(1, sessionId);
