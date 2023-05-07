@@ -91,32 +91,33 @@ const ChatBoard = () => {
       const apiTest = (time: number) => {
         return new Promise((resolve) => {
           let timesRun = 0;
+          let timeCount = 30;
+          const text = `在Redux中使用axios请求数据的一般流程是:
+
+          在组件中调用Redux action creator,触发action
+          在Redux reducer中处理action,更新state
+          在组件中使用state
+          在这个流程中,第1步可以通过组件的componentDidMount()生命周期函数来实现,即在组件挂载后立即调用action creator。在action creator中使用axios发起请求,请求完成后将返回的数据作为action的payload,dispatch这个action到reducer中进行处理。
+          
+          下面是一个使用axios请求数据并将其存储到Redux state中的示例:`;
+
           const interval = setInterval(() => {
             timesRun += 1;
-            console.log(timesRun);
-          }, 1000);
-          if (timesRun === 10) {
-            clearInterval(interval);
-            const text = 'test';
+
             setOnProgress(true);
             dispatch(uiSlice.actions.changeOnProgress(true));
             setAns(text);
-            dispatch(uiSlice.actions.changeCurAnswer(text));
-            resolve(text);
-          }
+            dispatch(uiSlice.actions.changeCurAnswer(text.slice(0, timesRun * (text.length / timeCount))));
 
-          // setTimeout(() => {
-          //   const text = 'test';
-          //   setOnProgress(true);
-          //   dispatch(uiSlice.actions.changeOnProgress(true));
-          //   setAns(text);
-          //   dispatch(uiSlice.actions.changeCurAnswer(text));
-          //   resolve(text);
-          // }, time);
+            if (timesRun === timeCount) {
+              clearInterval(interval);
+              resolve(text);
+            }
+          }, time);
         });
       }
 
-      await apiTest(1000).then((res) => {
+      await apiTest(100).then((res) => {
         console.log(res);
         setOnProgress(false);
         dispatch(uiSlice.actions.changeOnProgress(false));
