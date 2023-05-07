@@ -202,10 +202,15 @@ const ChatBoard = () => {
     );
   });
 
+  const blank = (
+    <Box className="question" sx={{ height: '15vh' }}></Box>
+  );
+
   return (
     <>
       <Stack>
         {chatHistoryList}
+        {blank}
       </Stack>
       <TextInput />
     </>
