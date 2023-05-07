@@ -47,7 +47,7 @@ export const uiSlice = createSlice({
       state.curSessionId = action.payload[0]?.id;
     },
     addSession: (state: UiState, action: PayloadAction<string>) => {
-      state.sessions.push({
+      state.sessions.unshift({
         id: action.payload,
         name: 'New chat',
         curQuestion: '',
@@ -68,6 +68,7 @@ export const uiSlice = createSlice({
     },
     deleteSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions = state.sessions.filter(session => session.id !== action.payload);
+      state.curSessionId = action.payload;  // TODO
     },
     initHistory: (state: UiState, action: PayloadAction<IMsg[]>) => {
       const session = state.sessions.find(session => session.id === state.curSessionId);

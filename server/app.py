@@ -89,7 +89,7 @@ class SelectSession(Resource):
     @api.expect(select_session)
     def post(self):
         user_id = request.json.get('user_id')
-        sessions = Session.query.filter_by(user_id=user_id).all()
+        sessions = Session.query.filter_by(user_id=user_id).order_by(Session.created_at.desc()).all()
         return {'sessions': [{'id': session.id, 'name': session.name} for session in sessions]}
 
 @ns.route('/session_add')
