@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { config } from "../config/config";
-import { ChatGPTAPI } from "chatgpt";
-import { HttpsProxyAgent } from "https-proxy-agent";
+// import { config } from "../config/config";
+// import { ChatGPTAPI } from "chatgpt";
+// import { HttpsProxyAgent } from "https-proxy-agent";
 import { Stack, Typography, Box } from "@mui/material";
 import { selectSendMsg, selectCurSessionId, selectHistory } from "../store/uiSlice";
 import { useSelector, useDispatch } from 'react-redux';
@@ -50,42 +50,77 @@ const ChatBoard = () => {
       console.log(sendMsg, chatHistory);
       if (!sendMsg) return;
 
-      if (chatHistory && chatHistory.length % 2 === 0) {
-        return;
+      // if (chatHistory && chatHistory.length % 2 === 0) {
+      //   return;
+      // }
+
+      // const options = {
+      //   apiKey: config.api,
+      //   debug: true,
+      // };
+
+      // const api = new ChatGPTAPI({
+      //   ...options, // Spread operator to include any additional options provided to ChatGPTAPI constructor
+      //   fetch: (url, options = {}) => {
+      //     const defaultOptions = {
+      //       agent: new HttpsProxyAgent({host: config.proxyHost, port: config.proxyPort}), // Update to pass proxy server information correctly
+      //     }
+      //     const mergedOptions = {
+      //       ...defaultOptions,
+      //       ...options, // Spread operator to override defaultOptions with any options provided to the fetch function
+      //     }
+      //     return fetch(url, mergedOptions) // Return fetch function with merged options
+      //   },
+      // });
+
+      // await api.sendMessage(sendMsg, {
+      //   systemMessage: '',
+      //   onProgress: r => {
+      //     setOnProgress(true);
+      //     dispatch(uiSlice.actions.changeOnProgress(true));
+      //     setAns(r.text);
+      //     dispatch(uiSlice.actions.changeCurAnswer(r.text));
+      //   },
+      // }).then((res) => {
+      //   console.log(res.text);
+      //   setOnProgress(false);
+      //   dispatch(uiSlice.actions.changeOnProgress(false));
+      //   addMessage(curSessionId as string, res.text, false);
+      // });
+
+      const apiTest = (time: number) => {
+        return new Promise((resolve) => {
+          let timesRun = 0;
+          const interval = setInterval(() => {
+            timesRun += 1;
+            console.log(timesRun);
+          }, 1000);
+          if (timesRun === 10) {
+            clearInterval(interval);
+            const text = 'test';
+            setOnProgress(true);
+            dispatch(uiSlice.actions.changeOnProgress(true));
+            setAns(text);
+            dispatch(uiSlice.actions.changeCurAnswer(text));
+            resolve(text);
+          }
+
+          // setTimeout(() => {
+          //   const text = 'test';
+          //   setOnProgress(true);
+          //   dispatch(uiSlice.actions.changeOnProgress(true));
+          //   setAns(text);
+          //   dispatch(uiSlice.actions.changeCurAnswer(text));
+          //   resolve(text);
+          // }, time);
+        });
       }
 
-      const options = {
-        apiKey: config.api,
-        debug: true,
-      };
-
-      const api = new ChatGPTAPI({
-        ...options, // Spread operator to include any additional options provided to ChatGPTAPI constructor
-        fetch: (url, options = {}) => {
-          const defaultOptions = {
-            agent: new HttpsProxyAgent({host: config.proxyHost, port: config.proxyPort}), // Update to pass proxy server information correctly
-          }
-          const mergedOptions = {
-            ...defaultOptions,
-            ...options, // Spread operator to override defaultOptions with any options provided to the fetch function
-          }
-          return fetch(url, mergedOptions) // Return fetch function with merged options
-        },
-      });
-
-      await api.sendMessage(sendMsg, {
-        systemMessage: '',
-        onProgress: r => {
-          setOnProgress(true);
-          dispatch(uiSlice.actions.changeOnProgress(true));
-          setAns(r.text);
-          dispatch(uiSlice.actions.changeCurAnswer(r.text));
-        },
-      }).then((res) => {
-        console.log(res.text);
+      await apiTest(1000).then((res) => {
+        console.log(res);
         setOnProgress(false);
         dispatch(uiSlice.actions.changeOnProgress(false));
-        addMessage(curSessionId as string, res.text, false);
+        addMessage(curSessionId as string, res as string, false);
       });
 
       window.scrollTo({
@@ -100,7 +135,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, curSessionId]);
+  }, [sendMsg, dispatch, curSessionId]); // what if sendMsg is not different?
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({
@@ -129,7 +164,6 @@ const ChatBoard = () => {
       </Typography>
     );
   });
-
 
   const chatMsg = (text: string) => text.split('```').map((item, index) => {
     if (index % 2 === 0) {

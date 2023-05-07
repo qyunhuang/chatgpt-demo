@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, Middleware } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { rootState } from "./";
 
 export interface IMsg {
@@ -110,13 +110,6 @@ export const uiSlice = createSlice({
     }
   },
 });
-
-export const localStorageMiddleware: Middleware = store => next => action => {
-  const result = next(action);
-
-  localStorage.setItem("chatHistory", JSON.stringify(store.getState().ui));
-  return result;
-}
 
 export const selectSendMsg = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.curQuestion;
 export const selectHistory = (state: rootState) => state.ui.sessions.find(session => session.id === state.ui.curSessionId)?.history;
