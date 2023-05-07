@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { uiSlice, selectSessionIds, selectCurSessionId, selectSessionNames } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
-import { addSession, renameSession, deleteSession } from '../utils/request';
+import { addSession, renameSession, deleteSession, selectSession } from '../utils/request';
 
 const SessionPanel = () => {
   const dispatch = useDispatch();
@@ -17,12 +17,23 @@ const SessionPanel = () => {
   const sessionNameRefs = React.useRef<{ [key: string]: HTMLSpanElement | null }>({});
 
   React.useEffect(() => {
+    const initSessions = async () => {
+      const res = await selectSession(1);
+      const { sessions } = res.data;
+      dispatch(uiSlice.actions.initSessions(sessions));
+    }
+
+    initSessions();
+  }, [dispatch]);
+
+  React.useEffect(() => {
     if (curSessionId) {
       navigate(`/${curSessionId}`);
     }
   }, [curSessionId, navigate]);
 
   const handleAddSession = () => {
+    console.log('add session');
     const sessionId = uuidv4();
     dispatch(uiSlice.actions.addSession(sessionId));
     addSession(1, sessionId);

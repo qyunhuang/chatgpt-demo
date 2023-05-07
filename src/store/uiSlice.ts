@@ -7,7 +7,7 @@ export interface IMsg {
   msgType: 'question' | 'answer';
 }
 
-export interface  ISession {
+export interface ISession {
   id: string;
   name: string;
   curQuestion: string;
@@ -15,12 +15,17 @@ export interface  ISession {
   history: IMsg[];
 }
 
+export interface IInitSessionsPayload {
+  id: string;
+  name: string;
+}
+
 export interface UiState {
   curSessionId?: string;
   sessions: ISession[];
 }
 
-const initialState: UiState = JSON.parse(localStorage.getItem("chatHistory") || 'null') || {
+const initialState: UiState = {
   curSessionId: undefined,
   sessions: [],
 };
@@ -29,6 +34,16 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: initialState,
   reducers: {
+    initSessions: (state: UiState, action: PayloadAction<IInitSessionsPayload[]>) => {
+      state.sessions = action.payload.map(session => ({
+        id: session.id,
+        name: session.name,
+        curQuestion: '',
+        onProgress: false,
+        history: [],
+      }));
+      state.curSessionId = action.payload[0].id;
+    },
     addSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions.push({
         id: action.payload,
@@ -51,6 +66,7 @@ export const uiSlice = createSlice({
     deleteSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions = state.sessions.filter(session => session.id !== action.payload);
     },
+    // push question to history
     changeQuestion: (state: UiState, action: PayloadAction<string>) => {
       const session = state.sessions.find(session => session.id === state.curSessionId);
       if (session) {
@@ -62,9 +78,11 @@ export const uiSlice = createSlice({
         });
       }
     },
+    // push answer to history
     changeCurAnswer: (state: UiState, action: PayloadAction<string>) => {
       const session = state.sessions.find(session => session.id === state.curSessionId);
       if (session) {
+        // if last msg is question, push new answer
         if (session.history[session.history.length - 1].msgType === 'question') {
           session.history.push({
             id: session.history.length,
@@ -74,6 +92,7 @@ export const uiSlice = createSlice({
           return;
         }
 
+        // if last msg is answer, change last msg
         session.history[session.history.length - 1].msg = action.payload;
       }
     },

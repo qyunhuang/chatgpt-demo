@@ -32,6 +32,14 @@ add_message = api.model('add_message', {
     'question': fields.Boolean(required=True, description='is question or answer')
 })
 
+select_message = api.model('select_message', {
+    'session_id': fields.Integer(required=True, description='session id')
+})
+
+select_session = api.model('select_session', {
+    'user_id': fields.Integer(required=True, description='user id')
+})
+
 add_session = api.model('add_session', {
     'session_id': fields.String(required=True, description='session id'),
     'user_id': fields.Integer(required=True, description='user id'),
@@ -76,6 +84,14 @@ class AddMessage(Resource):
         db.session.commit()
         return {'message': 'message added'}
 
+@ns.route('/session_select')
+class SelectSession(Resource):
+    @api.expect(select_session)
+    def post(self):
+        user_id = request.json.get('user_id')
+        sessions = Session.query.filter_by(user_id=user_id).all()
+        return {'sessions': [{'id': session.id, 'name': session.name} for session in sessions]}
+
 @ns.route('/session_add')
 class AddSession(Resource):
     @api.expect(add_session)
@@ -109,6 +125,14 @@ class DeleteSession(Resource):
         db.session.commit()
         return {'message': 'session deleted'}
     
+@ns.route('/message_select')
+class SelectMessage(Resource):
+    @api.expect(select_message)
+    def post(self):
+        session_id = request.json.get('session_id')
+        messages = Message.query.filter_by(session_id=session_id).all()
+        return {'messages': [{'content': message.content, 'question': message.question} for message in messages]}
+
 @app.cli.command('initdb')
 @click.option('--drop', is_flag=True, help='Create after drop.') 
 def initdb(drop):

@@ -5,7 +5,7 @@ export const store = configureStore({
   reducer: {
     ui: uiSlice.reducer,
   },
-  middleware: [localStorageMiddleware]
+  // middleware: [localStorageMiddleware]
 });
 
 export type rootState = ReturnType<typeof store.getState>;

@@ -2,17 +2,21 @@ import * as React from 'react';
 import { OutlinedInput, IconButton, InputAdornment, Box, Stack, Container,
   Typography, CircularProgress } from "@mui/material";
 import { Send, Loop, CropSquare } from "@mui/icons-material";
-import { uiSlice, selectOnProgress } from "../store/uiSlice";
+import { uiSlice, selectOnProgress, selectCurSessionId } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from '../utils/request';
+
 
 const TextInput = () => {
   const [text, setText] = React.useState<string>("");
   const onProgress = useSelector(selectOnProgress);
+  const curSessionId = useSelector(selectCurSessionId);
   const dispatch = useDispatch();
 
   const handleSend = () => {
     if (text !== "") {
       dispatch(uiSlice.actions.changeQuestion(text));
+      addMessage(curSessionId as string, text, true);
       setText("");
     }
   };
