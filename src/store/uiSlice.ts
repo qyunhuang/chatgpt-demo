@@ -68,7 +68,6 @@ export const uiSlice = createSlice({
     },
     deleteSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions = state.sessions.filter(session => session.id !== action.payload);
-      state.curSessionId = action.payload;  // TODO
     },
     initHistory: (state: UiState, action: PayloadAction<IMsg[]>) => {
       const session = state.sessions.find(session => session.id === state.curSessionId);
@@ -128,3 +127,11 @@ export const selectOnProgress = (state: rootState) => state.ui.sessions.find(ses
 export const selectSessionIds = (state: rootState) => state.ui.sessions.map(session => session.id);
 export const selectSessionNames = (state: rootState) => state.ui.sessions.map(session => session.name);
 export const selectCurSessionId = (state: rootState) => state.ui.curSessionId;
+export const selectNextSessionId = (state: rootState) => {
+  const curSessionIndex = state.ui.sessions.findIndex(session => session.id === state.ui.curSessionId);
+  if (curSessionIndex === state.ui.sessions.length - 1) {
+    return state.ui.sessions[0]?.id;
+  } else {
+    return state.ui.sessions[curSessionIndex + 1]?.id;
+  }
+}

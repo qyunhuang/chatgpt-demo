@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Stack, Typography } from '@mui/material';
 import { ChatBubbleOutline, Add, DriveFileRenameOutline, DeleteOutlined, Check } from "@mui/icons-material";
 import { v4 as uuidv4 } from 'uuid';
-import { uiSlice, selectSessionIds, selectCurSessionId, selectSessionNames } from "../store/uiSlice";
+import { uiSlice, selectSessionIds, selectCurSessionId, selectSessionNames, selectNextSessionId } from "../store/uiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import { addSession, renameSession, deleteSession, selectSession } from '../utils/request';
@@ -11,6 +11,7 @@ const SessionPanel = () => {
   const dispatch = useDispatch();
   const sessionIds = useSelector(selectSessionIds);
   const curSessionId = useSelector(selectCurSessionId);
+  const nextSessionId = useSelector(selectNextSessionId);
   const sessionNames = useSelector(selectSessionNames);
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = React.useState<boolean>(false);
@@ -44,6 +45,9 @@ const SessionPanel = () => {
 
   const handleDeleteSession = (id: string) => {
     dispatch(uiSlice.actions.deleteSession(id));
+    setTimeout(() => {
+      dispatch(uiSlice.actions.changeCurSessionId(nextSessionId as string));
+    }, 0);
     deleteSession(id);
   }
 
