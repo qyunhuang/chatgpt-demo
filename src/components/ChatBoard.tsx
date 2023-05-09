@@ -144,7 +144,7 @@ const ChatBoard = () => {
         top: document.body.scrollHeight
       });
     }
-  }, [sendMsg, dispatch, questionRepeat]);
+  }, [sendMsg, dispatch, questionRepeat, curSessionId]);
 
   const throttledScrollToBottom = useThrottledCallback(() => {
     window.scrollTo({
