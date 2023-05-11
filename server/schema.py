@@ -1,5 +1,4 @@
 from datetime import datetime
-from xmlrpc.client import boolean
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey
@@ -40,7 +39,7 @@ class Message(db.Model):
     id: int = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     session_id: str = sa.Column(sa.String(36), ForeignKey('session.id'), nullable=False)
     content: str = sa.Column(sa.Text, nullable=False)
-    question: boolean = sa.Column(sa.Boolean, nullable=False)
+    question: bool = sa.Column(sa.Boolean, nullable=False)
     created_at: datetime = sa.Column(sa.DateTime, nullable=False, default=datetime.now)
     session = db.relationship('Session', backref=backref('messages', cascade='all, delete-orphan'))
 
