@@ -44,7 +44,10 @@ export const uiSlice = createSlice({
         onProgress: false,
         history: [],
       }));
-      state.curSessionId = action.payload[0]?.id;
+
+      if (!state.curSessionId && state.sessions.length > 0) {
+        state.curSessionId = state.sessions[0].id;
+      }
     },
     addSession: (state: UiState, action: PayloadAction<string>) => {
       state.sessions.unshift({

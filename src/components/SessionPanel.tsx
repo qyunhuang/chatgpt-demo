@@ -24,9 +24,10 @@ const SessionPanel = () => {
       dispatch(uiSlice.actions.initSessions(sessions));
     }
 
-    initSessions();
+      initSessions();
   }, [dispatch]);
 
+  // change url when session id changes
   React.useEffect(() => {
     if (curSessionId) {
       navigate(`/${curSessionId}`);

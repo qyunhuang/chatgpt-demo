@@ -25,6 +25,7 @@ const ChatBoard = () => {
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
 
+  // change session id when url changes
   React.useEffect(() => {
     if (id) {
       dispatch(uiSlice.actions.changeCurSessionId(id));
