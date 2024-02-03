@@ -1,6 +1,6 @@
 # ChatGPT Demo
 
-This project aims to replicate the design of the conversation interface on the official ChatGPT website. The main features include creating new conversations, displaying responses in a conversational flow, and highlighting code snippets. Additionally, there is a unique feature that **detects code for generating visualizations using ECharts and renders them accordingly**.
+This project aims to replicate the design of the conversation interface on the official ChatGPT website. The main features include creating new conversations, **displaying responses with stream output**, and highlighting code snippets. Additionally, there is a unique feature that **detects code for generating visualizations using ECharts and renders them accordingly**.
 
 ## Technologies Used
 
