@@ -1,46 +1,53 @@
-# Getting Started with Create React App
+# ChatGPT Demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project aims to replicate the design of the conversation interface on the official ChatGPT website. The main features include creating new conversations, displaying responses in a conversational flow, and highlighting code snippets. Additionally, there is a unique feature that **detects code for generating visualizations using ECharts and renders them accordingly**.
 
-## Available Scripts
+## Technologies Used
 
-In the project directory, you can run:
+### Frontend
+- **React**
+- **Redux**
+- **Material-UI (MUI)**
+- **ECharts-for-React**
+- **React-Syntax-Highlighter**
 
-### `yarn start`
+### Backend
+- **Flask**
+- **MySQL**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Additional Details
+The frontend implementation involves calling the OpenAI API and handles VPN forwarding using `https-proxy-agent`. The main code for conversation handling is as follows:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```javascript
+const api = new ChatGPTAPI({
+  ...options,
+  fetch: (url, options = {}) => {
+    const defaultOptions = {
+      agent: new HttpsProxyAgent({host: config.proxyHost, port: config.proxyPort}),server information correctly
+    }
+    const mergedOptions = {
+      ...defaultOptions,
+      ...options
+    }
+    return fetch(url, mergedOptions);
+  },
+});
 
-### `yarn test`
+await api.sendMessage(sendMsg, {
+  systemMessage: '',
+  onProgress: r => {
+    setOnProgress(true);
+    dispatch(uiSlice.actions.changeOnProgress(true));
+    setAns(r.text);
+    dispatch(uiSlice.actions.changeCurAnswer(r.text));
+  },
+}).then((res) => {
+  setOnProgress(false);
+  dispatch(uiSlice.actions.changeOnProgress(false));
+  addMessage(curSessionId as string, res.text, false);
+});
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Screenshots
 
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+![Conversation Interface](./img/interface.jpg)
